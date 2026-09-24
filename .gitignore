@@ -25,3 +25,17 @@ Thumbs.db
 
 # local tooling state - never part of the app
 .claude
+
+# secrets / credentials - should never exist in this project, excluded
+# defensively regardless
+.env
+.env.*
+*.pfx
+*.key
+secrets.json
+
+# not used by this project (Tauri/Rust/Node, not .NET), excluded
+# defensively in case any tooling ever creates them
+.vs/
+bin/
+obj/

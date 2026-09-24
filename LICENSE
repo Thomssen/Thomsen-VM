@@ -1,0 +1,57 @@
+Thomsen VM - License
+Copyright (c) 2026 Thomsen. All rights reserved.
+
+This source is available to read, but this is not an open-source license.
+Being able to see the code does not grant permission to redistribute,
+resell, or reuse it.
+
+1. Grant of license
+
+   Permission is granted to any person obtaining a copy of this repository
+   or the compiled Thomsen VM application ("the Software") to view the
+   source, and to download, install, and run the compiled application,
+   free of charge, for personal or internal organizational use.
+
+2. Restrictions
+
+   Unless you have prior written permission from Thomsen, you may not:
+
+   - redistribute, mirror, or re-host the Software or its source, modified
+     or unmodified, outside of this repository;
+   - sell, rent, sublicense, or otherwise charge for the Software or any
+     copy or modified version of it;
+   - publish a modified or derivative version of the Software, whether as
+     source or as a compiled application;
+   - remove or alter any copyright, attribution, or licensing notice
+     contained in or displayed by the Software;
+   - claim authorship or ownership of the Software, in whole or in part;
+   - use the "Thomsen VM" name, wordmark, or icon to identify any product
+     or service other than this one, or in a way that implies endorsement
+     of another product.
+
+3. No warranty
+
+   The Software is provided "as is", without warranty of any kind, express
+   or implied, including but not limited to warranties of merchantability,
+   fitness for a particular purpose, and non-infringement. Thomsen is not
+   liable for any claim, damages, or other liability arising from the use
+   of the Software.
+
+4. Termination
+
+   This license terminates automatically if you violate any of the
+   restrictions above. Upon termination you must stop using and
+   distributing the Software.
+
+5. Contact
+
+   For permissions beyond this license, contact Thomsen via
+   https://thomssen.dev.
+
+---
+
+This license was written to clearly state the author's intent - free to
+view, download, and use, not free to resell, rebrand, or redistribute
+modified copies - and has not been reviewed by a lawyer. It is not a
+substitute for legal advice. If you need enforceable legal terms, have it
+reviewed by a licensed attorney before relying on it.
