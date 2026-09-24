@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { useToast } from "@/components/ui/Toast";
+import { ConfirmDialog } from "@/components/ui/Modal";
 import { ErrorNotice } from "@/components/ui/ErrorNotice";
 import { Field } from "@/components/ui/Field";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
@@ -18,6 +19,7 @@ import {
   PlayIcon,
   PowerIcon,
   RestartIcon,
+  StopIcon,
 } from "@/components/icons";
 import { VmDisplay } from "@/components/vm/VmDisplay";
 import { WindowControls } from "@/components/TitleBar/WindowControls";
@@ -60,6 +62,7 @@ export function ConsoleWindow({ vmId }: { vmId: string }) {
   const [stats, setStats] = useState<VmLiveStats | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<AppErrorShape | null>(null);
+  const [confirmForceStop, setConfirmForceStop] = useState(false);
 
   const [fullscreen, setFullscreenState] = useState(false);
   const [toolbarVisible, setToolbarVisible] = useState(true);
@@ -248,6 +251,11 @@ export function ConsoleWindow({ vmId }: { vmId: string }) {
 
   const sendCad = () => void sendCtrlAltDel(vmId).catch((e) => toast.error(errorMessage(e)));
 
+  const doForceStop = () => {
+    setConfirmForceStop(false);
+    void run(() => stopVm(vmId, true));
+  };
+
   if (!vm) {
     return (
       <div className="console-window">
@@ -300,6 +308,11 @@ export function ConsoleWindow({ vmId }: { vmId: string }) {
               {paused && <ControlButton icon={<PlayIcon size={15} />} label="Resume" primary busy={busy} onClick={() => run(() => resumeVm(vmId))} />}
               <ControlButton icon={<RestartIcon size={15} />} label="Restart" disabled={stopped} busy={busy} onClick={() => run(() => restartVm(vmId))} />
               <ControlButton icon={<PowerIcon size={15} />} label="Shutdown" disabled={stopped} busy={busy} onClick={() => run(() => stopVm(vmId))} />
+              {/* For a guest not responding to the graceful ACPI shutdown
+                  Shutdown sends (not yet booted, hung, or a live/installer
+                  environment with no power-button handling) - terminates
+                  the QEMU process directly. */}
+              <ControlButton icon={<StopIcon size={14} />} label="Force Stop" danger disabled={stopped} busy={busy} onClick={() => setConfirmForceStop(true)} />
               <ControlButton icon={<KeyboardIcon size={15} />} label="Ctrl+Alt+Del" disabled={!running} onClick={sendCad} />
               <ControlButton icon={<FullscreenIcon size={15} />} label="Fullscreen" onClick={toggleFullscreen} />
             </div>
@@ -337,6 +350,17 @@ export function ConsoleWindow({ vmId }: { vmId: string }) {
           Press <kbd>F11</kbd> or use the toolbar at the top of the screen to exit full screen
         </div>
       )}
+
+      <ConfirmDialog
+        open={confirmForceStop}
+        onClose={() => setConfirmForceStop(false)}
+        onConfirm={doForceStop}
+        title="Force stop virtual machine"
+        danger
+        busy={busy}
+        confirmLabel="Force Stop"
+        message={`This immediately terminates "${vm.name}" without asking the guest OS to shut down first - like pulling the power. Use this when Shutdown doesn't work (for example, at a boot menu or installer screen). Unsaved work inside the guest may be lost.`}
+      />
     </div>
   );
 }
@@ -380,6 +404,7 @@ function ControlButton({
   icon,
   label,
   primary,
+  danger,
   disabled,
   busy,
   onClick,
@@ -387,12 +412,18 @@ function ControlButton({
   icon: React.ReactNode;
   label: string;
   primary?: boolean;
+  danger?: boolean;
   disabled?: boolean;
   busy?: boolean;
   onClick: () => void;
 }) {
   return (
-    <button type="button" className={["console-control", primary ? "is-primary" : ""].filter(Boolean).join(" ")} disabled={disabled || busy} onClick={onClick}>
+    <button
+      type="button"
+      className={["console-control", primary ? "is-primary" : "", danger ? "is-danger" : ""].filter(Boolean).join(" ")}
+      disabled={disabled || busy}
+      onClick={onClick}
+    >
       <span className="console-control__icon">{icon}</span>
       <span className="console-control__label">{label}</span>
     </button>

@@ -18,12 +18,13 @@ interface VmCardProps {
   onOpen: () => void;
   onStart: () => void;
   onStop: () => void;
+  onForceStop: () => void;
   onRestart: () => void;
   onOpenConsole: () => void;
   onDelete: () => void;
 }
 
-export function VmCard({ vm, busy, onOpen, onStart, onStop, onRestart, onOpenConsole, onDelete }: VmCardProps) {
+export function VmCard({ vm, busy, onOpen, onStart, onStop, onForceStop, onRestart, onOpenConsole, onDelete }: VmCardProps) {
   const osLabel = presetById(vm.osPreset ?? undefined)?.label ?? (vm.osFamily === "windows" ? "Windows" : vm.osFamily === "linux" ? "Linux" : "Other");
   const running = vm.status === "running" || vm.status === "paused";
   const stopped = vm.status === "stopped";
@@ -43,6 +44,12 @@ export function VmCard({ vm, busy, onOpen, onStart, onStop, onRestart, onOpenCon
 
   const menuItems: MenuItem[] = [
     { label: "Restart", onSelect: onRestart, disabled: !running },
+    // For a guest that isn't responding to the graceful ACPI shutdown
+    // "Stop" sends (not yet booted, hung, or a live/installer environment
+    // with no power-button handling) - terminates the QEMU process
+    // directly instead of waiting indefinitely for a guest that may never
+    // respond.
+    { label: "Force Stop", onSelect: onForceStop, danger: true, disabled: stopped },
     { label: "Settings", onSelect: onOpen },
     { label: "Delete", onSelect: onDelete, danger: true, disabled: !stopped },
   ];

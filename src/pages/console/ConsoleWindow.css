@@ -361,6 +361,10 @@ body,
 .console-control.is-primary:hover:not(:disabled) {
   background: var(--btn-primary-bg-hover);
 }
+.console-control.is-danger:hover:not(:disabled) {
+  background: var(--bad-soft);
+  color: var(--bad);
+}
 .console-control__icon {
   display: inline-flex;
   align-items: center;

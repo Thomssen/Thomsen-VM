@@ -25,11 +25,17 @@ export function VirtualMachinesPage() {
   const [error, setError] = useState<AppErrorShape | null>(null);
   const [pendingDelete, setPendingDelete] = useState<VmSummary | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [pendingForceStop, setPendingForceStop] = useState<VmSummary | null>(null);
 
   const reload = () => void listVms().then(setVms).catch((e) => setError(asAppError(e)));
 
+  // Without this, a VM whose process dies on its own (crash, or an
+  // abruptly-closed app leaving it orphaned) keeps showing its last-known
+  // status indefinitely - nothing else on this page would ever notice.
   useEffect(() => {
     reload();
+    const id = window.setInterval(reload, 2000);
+    return () => window.clearInterval(id);
   }, []);
 
   const runAction = async (vm: VmSummary, action: () => Promise<void>) => {
@@ -37,10 +43,13 @@ export function VirtualMachinesPage() {
     setError(null);
     try {
       await action();
-      reload();
     } catch (e) {
       setError(asAppError(e));
     } finally {
+      // Reload even on failure - an action failing because the VM's real
+      // state already differs from what's displayed (e.g. "not running")
+      // is exactly when the stale card most needs correcting.
+      reload();
       setBusyId(null);
     }
   };
@@ -66,6 +75,11 @@ export function VirtualMachinesPage() {
     } else {
       void doDelete(vm);
     }
+  };
+
+  const doForceStop = async (vm: VmSummary) => {
+    setPendingForceStop(null);
+    await runAction(vm, () => stopVm(vm.id, true));
   };
 
   return (
@@ -104,6 +118,7 @@ export function VirtualMachinesPage() {
                 onOpen={() => openVmDetails(vm.id)}
                 onStart={() => runAction(vm, () => startVm(vm.id))}
                 onStop={() => runAction(vm, () => stopVm(vm.id))}
+                onForceStop={() => setPendingForceStop(vm)}
                 onRestart={() => runAction(vm, () => restartVm(vm.id))}
                 onOpenConsole={() => void openVmConsole(vm.id, vm.name)}
                 onDelete={() => requestDelete(vm)}
@@ -122,6 +137,17 @@ export function VirtualMachinesPage() {
         busy={deleting}
         confirmLabel="Delete"
         message={`This permanently deletes "${pendingDelete?.name}", including its virtual disk and any snapshots. This cannot be undone.`}
+      />
+
+      <ConfirmDialog
+        open={pendingForceStop != null}
+        onClose={() => setPendingForceStop(null)}
+        onConfirm={() => pendingForceStop && void doForceStop(pendingForceStop)}
+        title="Force stop virtual machine"
+        danger
+        busy={busyId === pendingForceStop?.id}
+        confirmLabel="Force Stop"
+        message={`This immediately terminates "${pendingForceStop?.name}" without asking the guest OS to shut down first - like pulling the power. Use this when Stop doesn't work (for example, at a boot menu or installer screen). Unsaved work inside the guest may be lost.`}
       />
     </Page>
   );

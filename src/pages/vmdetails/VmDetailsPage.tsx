@@ -55,13 +55,22 @@ export function VmDetailsPage() {
   const [error, setError] = useState<AppErrorShape | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [confirmForceStop, setConfirmForceStop] = useState(false);
 
   const reload = () => {
     if (!selectedVmId) return;
     void getVm(selectedVmId).then(setVm).catch((e) => setError(asAppError(e)));
   };
 
-  useEffect(reload, [selectedVmId]);
+  // Without this, a VM whose process dies on its own (crash, or an
+  // abruptly-closed app leaving it orphaned) keeps showing its last-known
+  // status indefinitely on this page - the separate live-stats poll below
+  // doesn't feed back into it.
+  useEffect(() => {
+    reload();
+    const id = window.setInterval(reload, 2000);
+    return () => window.clearInterval(id);
+  }, [selectedVmId]);
 
   if (!selectedVmId) {
     return (
@@ -76,10 +85,13 @@ export function VmDetailsPage() {
     setError(null);
     try {
       await action();
-      reload();
     } catch (e) {
       setError(asAppError(e));
     } finally {
+      // Reload even on failure - an action failing because the VM's real
+      // state already differs from what's displayed (e.g. "not running")
+      // is exactly when the stale page most needs correcting.
+      reload();
       setBusy(false);
     }
   };
@@ -102,6 +114,12 @@ export function VmDetailsPage() {
   const requestDelete = () => {
     if (settings.confirmBeforeDeleteVms) setConfirmDelete(true);
     else void doDelete();
+  };
+
+  const doForceStop = async () => {
+    if (!vm) return;
+    setConfirmForceStop(false);
+    await runAction(() => stopVm(vm.id, true));
   };
 
   if (!vm) {
@@ -133,6 +151,9 @@ export function VmDetailsPage() {
           )}
           {!stopped && (
             <>
+              <Button variant="danger" icon={<StopIcon size={13} />} disabled={busy} onClick={() => setConfirmForceStop(true)}>
+                Force Stop
+              </Button>
               <Button variant="secondary" icon={<RestartIcon size={13} />} loading={busy} onClick={() => runAction(() => restartVm(vm.id))}>
                 Restart
               </Button>
@@ -173,6 +194,17 @@ export function VmDetailsPage() {
         busy={deleting}
         confirmLabel="Delete"
         message={`This permanently deletes "${vm.name}", including its virtual disk and any snapshots. This cannot be undone.`}
+      />
+
+      <ConfirmDialog
+        open={confirmForceStop}
+        onClose={() => setConfirmForceStop(false)}
+        onConfirm={doForceStop}
+        title="Force stop virtual machine"
+        danger
+        busy={busy}
+        confirmLabel="Force Stop"
+        message={`This immediately terminates "${vm.name}" without asking the guest OS to shut down first - like pulling the power. Use this when Stop doesn't work (for example, at a boot menu or installer screen). Unsaved work inside the guest may be lost.`}
       />
     </Page>
   );

@@ -30,7 +30,16 @@ export function DashboardPage() {
     void getHostFacts().then(setHost).catch(() => {});
     void getStorageInfo().then(setStorage).catch(() => {});
     void getQemuStatus().then(setQemu).catch(() => {});
-    void listVms().then(setVms).catch(() => {});
+  }, []);
+
+  // Polled separately from the mostly-static host facts above: a VM's
+  // status can change on its own (crash, or an abruptly-closed app leaving
+  // it orphaned), and this page would otherwise never notice.
+  useEffect(() => {
+    const reload = () => void listVms().then(setVms).catch(() => {});
+    reload();
+    const id = window.setInterval(reload, 2000);
+    return () => window.clearInterval(id);
   }, []);
 
   // Cheap live numbers only, polled while this page is mounted - stopped the
