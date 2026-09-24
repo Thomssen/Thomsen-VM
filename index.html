@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <title>Thomsen VM</title>
+
+    <!--
+      Inter is bundled locally via @fontsource-variable/inter (imported in
+      src/main.tsx), so the app renders correctly offline with no external
+      requests on startup.
+    -->
+    <style>
+      /* Paint the window background before any CSS loads - no white flash. */
+      html,
+      body,
+      #root {
+        margin: 0;
+        height: 100%;
+        background: #050607;
+      }
+    </style>
+
+    <!-- Set the saved theme before first paint so there is no flash. The
+         SettingsProvider reconciles this with the backend value on load. -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('tvm-theme');
+          if (t !== 'light' && t !== 'dark' && t !== 'system') t = 'dark';
+          var resolved =
+            t === 'system'
+              ? window.matchMedia &&
+                window.matchMedia('(prefers-color-scheme: light)').matches
+                ? 'light'
+                : 'dark'
+              : t;
+          document.documentElement.setAttribute('data-theme', resolved);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

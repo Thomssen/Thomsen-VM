@@ -1,0 +1,157 @@
+/* ============================================================================
+   DESIGN TOKENS  -  the single source of truth for the app's look.
+   ----------------------------------------------------------------------------
+   Shared with Thomsen OSINT so every Thomsen app reads as one family: near-
+   black surfaces, white primary text, muted greys, hairline borders - a
+   quiet, professional feel with no neon and no motion for its own sake.
+
+   The theme is always resolved to an explicit `data-theme="dark"` or
+   `data-theme="light"` on <html> by the pre-paint script (src/main.tsx) -
+   "system" is resolved in JS - so the CSS only ever needs the two concrete
+   themes.
+   ========================================================================== */
+
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* -- Surfaces (near-black, subtly lighter as they come forward) --------- */
+  --bg: #050607;
+  --bg-alt: #08090b;
+  --surface: #0d0f11;
+  --surface-2: #131619;
+  --surface-3: #191d21;
+  --titlebar-bg: rgba(8, 9, 11, 0.72);
+  --sidebar-bg: rgba(8, 9, 11, 0.5);
+  --nav-bg: rgba(10, 12, 14, 0.66);
+
+  /* -- Text ------------------------------------------------------------- */
+  --text: #f2f3f4;
+  --text-secondary: #b4b9be;
+  --text-muted: #7c838a;
+  --text-faint: #565c62;
+
+  /* -- Lines ---------------------------------------------------------------- */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --border-faint: rgba(255, 255, 255, 0.05);
+
+  /* -- Primary (white) button ------------------------------------------- */
+  --btn-primary-bg: #f3f4f5;
+  --btn-primary-bg-hover: #ffffff;
+  --btn-primary-text: #0a0b0c;
+
+  /* -- Secondary / ghost controls ------------------------------------- */
+  --btn-secondary-bg: rgba(255, 255, 255, 0.05);
+  --btn-secondary-bg-hover: rgba(255, 255, 255, 0.09);
+  --btn-secondary-text: var(--text);
+
+  /* -- Accent (white - used sparingly for focus / selection) -------------- */
+  --accent: #ffffff;
+  --accent-soft: rgba(255, 255, 255, 0.12);
+  --glow: rgba(255, 255, 255, 0.06);
+
+  /* -- Field surfaces ------------------------------------------------------ */
+  --field-bg: rgba(255, 255, 255, 0.03);
+  --field-bg-focus: rgba(255, 255, 255, 0.05);
+  --field-border: rgba(255, 255, 255, 0.12);
+
+  /* -- Result status (the only colour in the app - muted, indicator-only) - */
+  --good: #6f9e8f;
+  --good-soft: rgba(111, 158, 143, 0.14);
+  --bad: #e5595a;
+  --bad-soft: rgba(229, 89, 90, 0.14);
+  --warn: #d8b24c;
+  --warn-soft: rgba(216, 178, 76, 0.14);
+  --neutral-status: #7c838a;
+  --neutral-status-soft: rgba(124, 131, 138, 0.14);
+
+  /* -- Shadows ---------------------------------------------------------- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 2px 10px rgba(0, 0, 0, 0.35), 0 14px 44px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 60px rgba(0, 0, 0, 0.5);
+
+  /* -- Radii ---------------------------------------------------------------- */
+  --radius-xs: 8px;
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+
+  /* -- Motion  (subtle, quick, never flashy) ----------------------------- */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 150ms;
+  --dur: 200ms;
+  --dur-slow: 260ms;
+
+  /* -- Type ------------------------------------------------------------- */
+  --font-sans: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'SFMono-Regular', ui-monospace, 'Cascadia Mono', 'Consolas',
+    'Liberation Mono', Menlo, monospace;
+
+  /* -- Layout metrics --------------------------------------------------- */
+  --titlebar-h: 38px;
+  --sidebar-w: 224px;
+  --content-max: 1160px;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #ffffff;
+  --bg-alt: #f6f7f8;
+  --surface: #ffffff;
+  --surface-2: #f2f3f5;
+  --surface-3: #ebedf0;
+  --titlebar-bg: rgba(255, 255, 255, 0.78);
+  --sidebar-bg: rgba(246, 247, 248, 0.7);
+  --nav-bg: rgba(255, 255, 255, 0.72);
+
+  --text: #0b0c0e;
+  --text-secondary: #40464d;
+  --text-muted: #6a7077;
+  --text-faint: #9aa0a6;
+
+  --border: rgba(11, 12, 16, 0.1);
+  --border-strong: rgba(11, 12, 16, 0.16);
+  --border-faint: rgba(11, 12, 16, 0.06);
+
+  --btn-primary-bg: #0b0c0e;
+  --btn-primary-bg-hover: #000000;
+  --btn-primary-text: #ffffff;
+
+  --btn-secondary-bg: rgba(11, 12, 16, 0.04);
+  --btn-secondary-bg-hover: rgba(11, 12, 16, 0.08);
+  --btn-secondary-text: var(--text);
+
+  --accent: #0b0c0e;
+  --accent-soft: rgba(11, 12, 16, 0.07);
+  --glow: rgba(11, 12, 16, 0.035);
+
+  --field-bg: rgba(11, 12, 16, 0.02);
+  --field-bg-focus: rgba(11, 12, 16, 0.04);
+  --field-border: rgba(11, 12, 16, 0.16);
+
+  --good: #4f8474;
+  --good-soft: rgba(79, 132, 116, 0.12);
+  --bad: #cf3b3d;
+  --bad-soft: rgba(207, 59, 61, 0.1);
+  --warn: #b4902f;
+  --warn-soft: rgba(180, 144, 47, 0.14);
+  --neutral-status: #6a7077;
+  --neutral-status-soft: rgba(106, 112, 119, 0.1);
+
+  --shadow-sm: 0 1px 2px rgba(12, 14, 20, 0.05);
+  --shadow-md: 0 2px 10px rgba(12, 14, 20, 0.05), 0 16px 44px rgba(12, 14, 20, 0.08);
+  --shadow-lg: 0 14px 54px rgba(12, 14, 20, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 1ms;
+    --dur: 1ms;
+    --dur-slow: 1ms;
+  }
+}

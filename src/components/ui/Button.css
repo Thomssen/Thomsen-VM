@@ -1,0 +1,109 @@
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 34px;
+  padding-inline: 15px;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    opacity var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+.btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.btn--sm {
+  height: 28px;
+  padding-inline: 12px;
+  font-size: 12px;
+}
+
+.btn--lg {
+  height: 46px;
+  padding-inline: 22px;
+  font-size: 14px;
+  gap: 9px;
+}
+
+.btn--primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+}
+.btn--primary:hover:not(:disabled) {
+  background: var(--btn-primary-bg-hover);
+}
+
+.btn--secondary {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border-color: var(--border);
+}
+.btn--secondary:hover:not(:disabled) {
+  background: var(--btn-secondary-bg-hover);
+  border-color: var(--border-strong);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--text-muted);
+}
+.btn--ghost:hover:not(:disabled) {
+  color: var(--text);
+  background: var(--btn-secondary-bg);
+}
+
+.btn--danger {
+  background: transparent;
+  color: var(--bad);
+  border-color: var(--border);
+}
+.btn--danger:hover:not(:disabled) {
+  background: var(--bad-soft);
+  border-color: var(--bad);
+}
+
+.btn--full {
+  width: 100%;
+}
+
+.btn__icon {
+  display: inline-flex;
+}
+
+.btn--loading {
+  color: transparent !important;
+}
+.btn__spinner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.6px solid currentColor;
+  border-top-color: transparent;
+  color: inherit;
+  opacity: 0.7;
+  animation: tvm-spin 0.7s linear infinite;
+}
+.btn--primary.btn--loading .btn__spinner {
+  color: var(--btn-primary-text);
+}
+.btn--secondary.btn--loading .btn__spinner,
+.btn--ghost.btn--loading .btn__spinner,
+.btn--danger.btn--loading .btn__spinner {
+  color: var(--text);
+}

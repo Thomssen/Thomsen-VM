@@ -1,0 +1,86 @@
+[package]
+name = "thomsen-vm"
+version = "1.0.0"
+description = "Thomsen VM"
+authors = ["Thomsen"]
+edition = "2021"
+rust-version = "1.81"
+
+# App logic lives in a library crate with a thin `main.rs` so the modules stay
+# testable and the layout matches the Tauri v2 template.
+[lib]
+name = "thomsen_vm_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-dialog = "2"
+tauri-plugin-opener = "2"
+tauri-plugin-autostart = "2"
+# Without this, launching the app again (double-clicking the shortcut while
+# it's already running, etc.) starts a second, fully independent process -
+# its own in-memory lock/session state, its own copy of every running VM's
+# tracking, free to start the *same* VM a second time. Registered first so
+# it can intercept a second launch before anything else initializes.
+tauri-plugin-single-instance = "2"
+
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1", features = ["v4"] }
+
+# Async runtime for VM process supervision (QEMU child processes), the QMP
+# control-socket client, and cooperative cancellation of long-running setup
+# steps (e.g. creating a large disk image).
+tokio = { version = "1", features = [
+    "rt-multi-thread",
+    "macros",
+    "net",
+    "time",
+    "sync",
+    "fs",
+    "io-util",
+    "process",
+] }
+
+# Real host hardware/OS readings for the Dashboard and System page (CPU, RAM,
+# disks). Windows-specific facts sysinfo doesn't cover (firmware VT-x/AMD-V
+# flag, GPU name, Hyper-V service state, exact Windows build) are read via
+# targeted PowerShell/CIM queries in `sysinfo_probe::wmi`, not this crate.
+sysinfo = "0.32"
+
+[target.'cfg(windows)'.dependencies]
+# Used to hide the QEMU child process's own console window when we launch it
+# without a visible terminal flashing behind our UI.
+windows-sys = { version = "0.59", features = ["Win32_System_Threading", "Win32_Foundation"] }
+
+# Optional app-lock password. Hash lives in the Windows Credential Manager,
+# never in settings.json - see lock.rs.
+keyring = { version = "3", features = ["windows-native"] }
+# App-lock password hashing (Argon2id). Salt generation uses this crate's own
+# re-exported `password_hash::rand_core::OsRng`. `rand` feature requested
+# explicitly (rather than relying on argon2's default feature set) since
+# that's what re-exports `password_hash::rand_core` at all.
+argon2 = { version = "0.5", features = ["rand"] }
+# `rand_core::OsRng` itself is additionally gated behind rand_core's own
+# "getrandom" feature, which nothing else in this (deliberately lean)
+# dependency tree happens to enable. Pinned to the same 0.6 line argon2/
+# password-hash already resolve to, so Cargo unifies this as the *same*
+# crate instance rather than a second, type-incompatible one - this is a
+# direct dependency purely to flip that one feature on, never used directly.
+rand_core = { version = "0.6", features = ["getrandom"] }
+
+[features]
+# Used by the Tauri CLI for production builds.
+custom-protocol = ["tauri/custom-protocol"]
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+panic = "abort"
+strip = true

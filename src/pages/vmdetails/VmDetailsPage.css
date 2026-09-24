@@ -1,0 +1,192 @@
+.vmdetails__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vmdetails__tabs {
+  margin-bottom: 20px;
+}
+
+.vmdetails__error {
+  margin-bottom: 16px;
+}
+
+.vmdetails__loading {
+  padding: 20px 4px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+/* -- Overview stat grid -------------------------------------------------- */
+.vmdetails__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.vmdetails__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.vmdetails__stat-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.vmdetails__stat-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* -- Hardware / shared rows ------------------------------------------------ */
+.vmdetails__lock-hint {
+  margin-bottom: 14px;
+  font-size: 12px;
+  color: var(--warn);
+}
+.vmdetails__lock-hint--inline {
+  margin-bottom: 0;
+  color: var(--text-muted);
+}
+
+.vmdetails__hw-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.vmdetails__firmware-field {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-faint);
+}
+
+.vmdetails__actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-faint);
+}
+
+.vmdetails__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.vmdetails__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 9px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-faint);
+}
+.vmdetails__row:last-child {
+  border-bottom: none;
+}
+.vmdetails__row > span:first-child {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.vmdetails__row .mono {
+  text-align: right;
+  word-break: break-all;
+}
+
+/* -- Network cards ---------------------------------------------------------- */
+.vmdetails__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.vmdetails__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 14px 16px;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+}
+.vmdetails__card:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+}
+.vmdetails__card.is-selected {
+  border-color: var(--text);
+  background: var(--surface-2);
+}
+.vmdetails__card:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.vmdetails__card-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+.vmdetails__card-hint {
+  font-size: 11.5px;
+  color: var(--text-faint);
+  line-height: 1.5;
+}
+
+/* -- Snapshots list -------------------------------------------------------- */
+.vmdetails__snap-list {
+  display: flex;
+  flex-direction: column;
+}
+.vmdetails__snap-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+}
+.vmdetails__snap-row + .vmdetails__snap-row {
+  border-top: 1px solid var(--border-faint);
+}
+.vmdetails__snap-main {
+  flex: 1;
+  min-width: 0;
+}
+.vmdetails__snap-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+.vmdetails__snap-meta {
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: var(--text-faint);
+}
+.vmdetails__snap-actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 900px) {
+  .vmdetails__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .vmdetails__hw-grid {
+    grid-template-columns: 1fr;
+  }
+}

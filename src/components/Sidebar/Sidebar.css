@@ -1,0 +1,101 @@
+.sidebar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px 12px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border-faint);
+  overflow-y: auto;
+}
+
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 4px 8px 20px;
+}
+
+.sidebar__mark {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sidebar__wordmark {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.sidebar__nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+}
+
+.sidebar__group {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-faint);
+}
+.sidebar__group:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
+.sidebar__link {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding-inline: 10px;
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-align: left;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+.sidebar__link:hover {
+  color: var(--text);
+  background: var(--btn-secondary-bg);
+}
+.sidebar__link.is-active {
+  color: var(--text);
+  background: var(--btn-secondary-bg-hover);
+  font-weight: 600;
+}
+
+.sidebar__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 10px;
+  margin-top: 8px;
+  border-top: 1px solid var(--border-faint);
+}
+
+.sidebar__footer-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sidebar__footer-right .btn {
+  padding-inline: 7px;
+}

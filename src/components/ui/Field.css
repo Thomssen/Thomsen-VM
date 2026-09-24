@@ -1,0 +1,86 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.field__labelrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.field__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.field__hint {
+  font-size: 11.5px;
+  color: var(--text-faint);
+}
+
+.field__error {
+  font-size: 11.5px;
+  color: var(--bad);
+}
+
+.input {
+  width: 100%;
+  height: 36px;
+  padding-inline: 12px;
+  background: var(--field-bg);
+  border: 1px solid var(--field-border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 13px;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+.input::placeholder {
+  color: var(--text-faint);
+}
+.input:hover {
+  border-color: var(--border-strong);
+}
+.input:focus {
+  outline: none;
+  background: var(--field-bg-focus);
+  border-color: var(--text-faint);
+}
+.input--mono {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+.input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.textarea {
+  height: auto;
+  padding-block: 10px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.select {
+  position: relative;
+  display: block;
+}
+.select__el {
+  appearance: none;
+  padding-right: 32px;
+  cursor: pointer;
+}
+.select__chevron {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-faint);
+  pointer-events: none;
+}

@@ -1,0 +1,93 @@
+/* ============================================================================
+   APP SHELL  -  the frameless window layout.
+   ----------------------------------------------------------------------------
+   +------------------------------------------------------------+
+   | title bar (drag region + window controls)                 |
+   +-------------+----------------------------------------------+
+   |  sidebar    |  main : page body (scrolls)                  |
+   |             |                                              |
+   +-------------+----------------------------------------------+
+   ========================================================================== */
+
+.app {
+  position: relative;
+  display: grid;
+  grid-template-rows: var(--titlebar-h) 1fr;
+  height: 100%;
+  /* Faint light bloom from the top - the same trick the website uses. */
+  background:
+    radial-gradient(72% 320px at 60% 0%, var(--glow), transparent 72%),
+    var(--bg);
+  overflow: hidden;
+  animation: fade-in var(--dur-slow) var(--ease) both;
+}
+
+.app__body {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  min-height: 0;
+}
+
+.app__main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Route transition wrapper (remounts on navigation via a React `key`) - must
+   pass the flex chain through untouched or the page below it can't be
+   constrained to the window's height, and .page__scroll never gets anything
+   to scroll within. */
+.routeview {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+}
+
+/* Quiet dot texture so large empty areas read as "calm", not "unfinished". */
+.app__main::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle at center,
+    var(--border) 1px,
+    transparent 1.5px
+  );
+  background-size: 30px 30px;
+  -webkit-mask-image: radial-gradient(120% 70% at 88% 0%, #000 0%, transparent 60%);
+  mask-image: radial-gradient(120% 70% at 88% 0%, #000 0%, transparent 60%);
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app__main > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* First-run / store load warning strip. */
+.app__notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--warn-soft);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 12.5px;
+}
+.app__notice button {
+  margin-left: auto;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.app__notice button:hover {
+  color: var(--text);
+}

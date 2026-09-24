@@ -1,0 +1,116 @@
+.titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--titlebar-h);
+  padding-left: 14px;
+  background: var(--titlebar-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-faint);
+  user-select: none;
+}
+
+.titlebar__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: -0.005em;
+}
+
+.titlebar__sep {
+  color: var(--text-faint);
+}
+
+.titlebar__route {
+  color: var(--text-faint);
+  font-weight: 500;
+}
+
+/* macOS-style "traffic light" controls - kept on the right (Windows
+   convention for this app) rather than macOS's native left placement. */
+.titlebar__controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  padding-right: 14px;
+}
+
+.titlebar__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  color: rgba(0, 0, 0, 0.55);
+  transition: filter var(--dur-fast) var(--ease);
+}
+.titlebar__btn:hover {
+  filter: brightness(0.94);
+}
+.titlebar__btn:active {
+  filter: brightness(0.85);
+}
+
+.titlebar__btn svg {
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+.titlebar__controls:hover .titlebar__btn svg {
+  opacity: 1;
+}
+
+.titlebar__btn--minimize {
+  background: #febc2e;
+}
+.titlebar__btn--maximize {
+  background: #28c840;
+}
+.titlebar__btn--close {
+  background: #ff5f57;
+}
+
+:root[data-theme='light'] .titlebar__btn {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+/* Self-contained (not scoped to `.titlebar--windows`) so the Windows-style
+   cluster looks right flush against any window's edge - the VM Console
+   header reuses these same classes via `WindowControls`. */
+.titlebar__controls--windows {
+  gap: 0;
+  align-self: stretch;
+  padding-right: 0;
+}
+
+.titlebar__winbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 100%;
+  color: var(--text-secondary);
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+.titlebar__winbtn:hover {
+  background: var(--btn-secondary-bg);
+  color: var(--text);
+}
+.titlebar__winbtn:active {
+  background: var(--btn-secondary-bg-hover);
+}
+.titlebar__winbtn--close:hover {
+  background: #e81123;
+  color: #ffffff;
+}
+.titlebar__winbtn--close:active {
+  background: #f1707a;
+}

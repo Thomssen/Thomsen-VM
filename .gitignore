@@ -1,0 +1,27 @@
+# dependencies
+node_modules
+.pnp
+.pnp.js
+
+# build output
+dist
+dist-ssr
+*.local
+
+# rust / tauri
+src-tauri/target
+src-tauri/gen/schemas
+
+# editor / os
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
+*.log
+
+# app data written during dev
+/scratch
+
+# local tooling state - never part of the app
+.claude

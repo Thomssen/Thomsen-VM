@@ -1,0 +1,58 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Thomsen VM",
+  "version": "1.0.0",
+  "identifier": "dev.thomssen.vm",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1430",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Thomsen VM",
+        "label": "main",
+        "width": 1320,
+        "height": 860,
+        "minWidth": 1040,
+        "minHeight": 700,
+        "resizable": true,
+        "maximizable": true,
+        "fullscreen": false,
+        "decorations": false,
+        "transparent": false,
+        "shadow": true,
+        "center": true,
+        "visible": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; img-src 'self' data: asset: http://asset.localhost; style-src 'self' 'unsafe-inline'; font-src 'self' data:; frame-src 'self'; connect-src 'self' ipc: http://ipc.localhost ws://127.0.0.1:*"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "publisher": "Thomsen",
+    "copyright": "Copyright (c) 2026 Thomsen",
+    "category": "Utility",
+    "shortDescription": "Free, simple virtual machine manager for Windows.",
+    "longDescription": "Thomsen VM - a free, modern virtual machine manager for Windows. Create and run isolated virtual machines (Windows, Linux, and more) with a clean setup wizard, a live console, and snapshot management, powered by QEMU.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "installerIcon": "icons/icon.ico",
+        "uninstallerIcon": "icons/icon.ico"
+      }
+    }
+  }
+}

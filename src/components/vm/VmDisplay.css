@@ -1,0 +1,49 @@
+.vm-display {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* Always fill whatever flex cell it's placed in - the windowed console
+     centers its stage's content by default, and full screen's stage is a
+     plain block, so both axes need to be pinned explicitly here rather than
+     relying on either parent's layout mode. */
+  flex: 1 1 auto;
+  align-self: stretch;
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.vm-display__surface {
+  position: absolute;
+  inset: 0;
+}
+
+.vm-display__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  padding: 24px;
+  background: var(--surface);
+  pointer-events: none;
+}
+.vm-display__overlay-icon {
+  color: var(--text-faint);
+}
+.vm-display__overlay-status {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.vm-display__overlay-error {
+  width: 100%;
+  max-width: 440px;
+  margin-top: 8px;
+  pointer-events: auto;
+  text-align: left;
+}

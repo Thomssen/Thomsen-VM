@@ -1,0 +1,381 @@
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.console-window {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg);
+  animation: fade-in var(--dur-slow) var(--ease) both;
+}
+
+.console-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--titlebar-h);
+  flex-shrink: 0;
+  padding-left: 16px;
+  background: var(--titlebar-bg);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-faint);
+  user-select: none;
+}
+.console-header__label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.console-header__name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.console-window__body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  gap: 16px;
+}
+
+.console-window__stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: padding var(--dur-slow) var(--ease), border-radius var(--dur-slow) var(--ease), border-color var(--dur-slow) var(--ease);
+}
+/* Once a real guest display is showing, VmDisplay provides its own frame
+   (border/background/radius) sized to fill this stage exactly - keeping the
+   stage's own padding too would double-frame the picture (a gap, then
+   another border) and waste space that could go to the guest screen. */
+.console-window__stage--display {
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+}
+.console-window__stage-icon {
+  color: var(--text-faint);
+}
+.console-window__stage-status {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.console-window__stage-note {
+  max-width: 40ch;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+/* Floats over whatever else is in the stage (including a live VmDisplay,
+   which claims the stage's full flex space) instead of competing for
+   layout room as a flow sibling. */
+.console-window__error {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  width: calc(100% - 48px);
+  max-width: 440px;
+  z-index: 5;
+}
+
+/* -- Full screen ------------------------------------------------------------ */
+
+.console-window {
+  position: relative;
+}
+.console-window--fullscreen .console-window__body {
+  padding: 0;
+  gap: 0;
+}
+.console-window--fullscreen .console-window__stage {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: var(--bg);
+}
+.console-window--fullscreen .vm-display {
+  border: none;
+  border-radius: 0;
+}
+
+.console-fs-toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--titlebar-h);
+  padding: 0 10px 0 16px;
+  background: var(--titlebar-bg);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-faint);
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform var(--dur-slow) var(--ease), opacity var(--dur-slow) var(--ease);
+}
+.console-fs-toolbar.is-visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+.console-fs-toolbar__label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+.console-fs-toolbar__name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.console-fs-toolbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.console-fs-toolbar__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: var(--radius-sm);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.console-fs-toolbar__btn:hover:not(:disabled) {
+  background: var(--btn-secondary-bg);
+  color: var(--text);
+}
+.console-fs-toolbar__btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.console-fs-toolbar__menu {
+  position: relative;
+}
+.console-fs-toolbar__panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 100;
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  animation: menu-in var(--dur-fast) var(--ease-out) both;
+  text-align: left;
+}
+.console-fs-toolbar__panel-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.console-fs-hint {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  z-index: 30;
+  transform: translateX(-50%);
+  padding: 9px 16px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-md);
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  pointer-events: none;
+  animation: fs-hint-in var(--dur-slow) var(--ease-out) both;
+}
+.console-fs-hint kbd {
+  padding: 1px 6px;
+  margin: 0 1px;
+  background: var(--btn-secondary-bg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text);
+}
+
+@keyframes fs-hint-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.console-window__indicators {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  flex-shrink: 0;
+}
+.console-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+}
+.console-indicator__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  color: var(--text-faint);
+  background: var(--surface-3);
+  border-radius: var(--radius-xs);
+}
+.console-indicator__body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.console-indicator__label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.console-indicator__value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.console-indicator__value--muted {
+  color: var(--text-faint);
+  font-weight: 500;
+}
+
+.console-window__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.console-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 18px;
+  min-width: 80px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.console-control:hover:not(:disabled) {
+  background: var(--btn-secondary-bg);
+  color: var(--text);
+}
+.console-control:active:not(:disabled) {
+  background: var(--btn-secondary-bg-hover);
+}
+.console-control:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.console-control.is-primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+}
+.console-control.is-primary:hover:not(:disabled) {
+  background: var(--btn-primary-bg-hover);
+}
+.console-control__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 15px;
+}
+.console-control__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .console-window__indicators {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

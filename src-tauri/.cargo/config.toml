@@ -1,0 +1,13 @@
+# Rust embeds the absolute local source path in every panic!()/assert!()/
+# #[track_caller] site via file!() by default, which leaks the build
+# machine's username and folder layout into the compiled binary - and not
+# just from this crate's own source: dependency crates built from the local
+# Cargo registry cache (%USERPROFILE%\.cargo\registry\src\...) embed the
+# same username too. Cargo's `trim-paths` profile option would be the
+# cleaner fix but isn't stabilized on the currently installed toolchain, so
+# --remap-path-prefix (a stable rustc flag) is used instead. Remapping the
+# whole user profile root - rather than just this project's folder - covers
+# both in one rule, and anything else rooted there (rustup toolchain source,
+# etc.) without needing a separate rule per prefix.
+[build]
+rustflags = ['--remap-path-prefix=C:\Users\krist=user']

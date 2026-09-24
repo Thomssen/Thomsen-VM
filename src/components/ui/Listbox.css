@@ -1,0 +1,117 @@
+.listbox {
+  position: relative;
+}
+
+.listbox__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
+}
+.listbox__trigger:focus-visible {
+  outline: none;
+  background: var(--field-bg-focus);
+  border-color: var(--text-faint);
+}
+.listbox__trigger.is-open {
+  border-color: var(--text-faint);
+  background: var(--field-bg-focus);
+}
+
+.listbox__trigger-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.listbox__chevron {
+  flex-shrink: 0;
+  color: var(--text-faint);
+  transition: transform var(--dur-fast) var(--ease);
+}
+.listbox__trigger.is-open .listbox__chevron {
+  transform: rotate(180deg);
+}
+
+.listbox__panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 100;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 6px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  animation: listbox-in var(--dur-fast) var(--ease-out) both;
+}
+
+@keyframes listbox-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.listbox__option {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: var(--radius-xs);
+  text-align: left;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+.listbox__option + .listbox__option {
+  margin-top: 1px;
+}
+.listbox__option:hover:not(:disabled) {
+  background: var(--btn-secondary-bg-hover);
+}
+.listbox__option:disabled {
+  cursor: default;
+}
+
+.listbox__option-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.listbox__option-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+}
+.listbox__option:disabled .listbox__option-label {
+  color: var(--text-muted);
+}
+
+.listbox__option-check {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+
+.listbox__option-description {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+.listbox__option:disabled .listbox__option-description {
+  color: var(--text-faint);
+}
